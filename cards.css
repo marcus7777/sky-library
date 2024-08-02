@@ -1,0 +1,286 @@
+body {
+  background-color: #55c2c3;
+}
+::backdrop {
+  background-image: linear-gradient(
+    45deg,
+    magenta,
+    rebeccapurple,
+    dodgerblue,
+    green
+  );
+  opacity: 0.70;
+}
+[draggable=true] {
+  cursor: move;
+}
+#table {
+  height: 100vh;
+  perspective: 600px;
+}
+.rootCard {
+  text-align: center;
+}
+.outerCard {
+  transition: transform 0.5s;
+}
+.rootContainer {
+  display: flex;
+  justify-content: center;
+}
+#root.ellipse {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  width: 100vw;
+}
+input {
+  margin: .5em;
+}
+.container {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-around;
+}
+.container.ellipse {
+  margin-top: 0px;
+  display: block;
+  justify-content: none;
+  /*  perspective: 1000px; */
+}
+@font-face {
+  font-family: 'Zapfino';
+  src: url('/assets/Zapfino.woff2') format('woff2'), url('/assets/Zapfino.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+h1 {
+  font-family: 'Zapfino';
+  font-weight: normal;
+  font-style: italic;
+}
+.card {
+  display: inline-block;
+  transition: all 0.5s ease-in-out;
+  animation: slideInBottom .7s ease-in-out;
+}
+.ellipse .outerMainCard {
+  position: absolute;
+}
+.mainCard {
+  height: -webkit-fill-available;
+  text-align: center;
+  animation: slideInTop .5s ease-in-out;
+}
+.outerMainCard {
+  transition: all 0.5s ease-in-out;
+  max-width: 20vw;
+}
+.card.hidden {
+  animation: fadeOut 1s ease-in-out;
+}
+.visible {
+  animation: fadeIn 1s ease-in-out;
+}
+.card:hover,
+.card:focus, 
+.card:has(:focus-within),
+.card:has(.curser) {
+  display: inline-block;
+  transition: all 0.5s ease-in-out; 
+  margin: 0 0 0 0;
+}
+
+.form button {
+  display: none
+}
+.form:focus-within button {
+  display: inline-block
+}
+.form input {
+  display: none
+}
+.form:focus-within input {
+  display: block
+}
+.card .inner {
+  display: inline-block;
+  background-color: white;
+  height: auto;
+  align-items: center;
+  padding: 30px 20px;
+  border-radius: 10px;
+  border: solid 2px;
+  box-shadow: 4px 4px 20px;
+  height: -webkit-fill-available;
+  min-width: 138px;
+  min-height: 200px;
+}
+
+.card:hover .inner,
+.card .curser,
+.card:focus .inner {
+  background-color: #fff777;
+  transition: all 0.2s ease-in-out;
+  margin-left:0%;   
+  box-shadow: 10px 10px 20px 
+}
+
+.card > h1 {
+  font-size: 28px;
+  margin: 0px;
+}
+
+.card > p {
+  font-size: 18px;
+  text-align: center;
+}
+.card > a {
+  text-decoration: none;
+  background-color: #ffb534;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.card:hover.card > a {
+  background-color: white;
+  color: #ffb534;
+}
+/*.dropDown {
+  position: fixed;
+  right: 2%;
+  bottom: 8%;
+}*/
+.fab {
+  position: fixed;
+  right: 10vh;
+  bottom: 10vh;
+  font-size: 2vh;
+  padding: 1%;
+  font-weight: 900;
+  font-size: 200%;
+  border-radius: 50%;
+  background-color: #ddd;
+  line-height: 20px;
+  cursor: pointer;
+  box-shadow: 4px 4px 20px;
+  width: 50px;
+  height: 50px;
+  z-index: 1000;
+}
+/*.dropDownElements {
+  position: relative;
+  bottom: 100%; 
+  display: block;
+}*/
+/* animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100vh);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes slideOutBottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100vh);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes slideOutTop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100vh);
+  }
+}
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+

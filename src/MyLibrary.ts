@@ -3,7 +3,7 @@ import "./style.css";
 export default class MyLibrary {
   name: string;
   constructor() {
-    this.name = "MyLibrary";
+    this.name = "Sky Library";
     console.log("Library constructor loaded");
   }
 
