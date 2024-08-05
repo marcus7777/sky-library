@@ -16,8 +16,8 @@ function makeHash(card) {
   delete obj.subCards; //removes a property from an object: removing the subcards from each card so that the hash won't change when adding subcards
   const str = JSON.stringify(obj);
   let hash = 0;
-  if (str.length == 0) { //returns 0 (maybe useless?)
-    return hash;
+  if (str.length == 0) {
+    return "empty000";
   }
   for (let i = 0; i < str.length; i++) {
     let char = str.charCodeAt(i);
@@ -45,7 +45,7 @@ function savesToLocalStorage(file, cb) { //cb is a callback function that is cal
   }
   reader.readAsText(file)          
 }
-function saveFile(text, title) {
+function saveFile(text, title) { //saves the file to the local download
   const link = document.createElement("a");
   const file = new Blob([text], { type: 'text/plain' });
   link.href = URL.createObjectURL(file);
@@ -55,7 +55,7 @@ function saveFile(text, title) {
 }
 // swop the order of the cards
 const store = reactive({ //updates the html immediately
-  curser:0,
+  curser: 0,
   pageTitle: '',
   root: {
     title: '',
@@ -74,6 +74,13 @@ const store = reactive({ //updates the html immediately
     // look at the card and decide if it should be shown in the main list
     // trail is the path to the current card
     const topTrail = window.location.hash.slice(1).split("/").slice(0, -1)[0]
+    console.log("topTrail", topTrail)
+    if (!card) {
+      return false
+    }
+    if (this.root.hideDone && card.done) {
+      return false
+    }
     return true
   },
   newCard: {

@@ -22,7 +22,8 @@
 
         <label for="hideDone">Hide Done</label>-->
 
-        <button class="fab" @click="store.menuClick()">⋮</button> 
+        <button class="fab"       @click="store.addClick()" > + </button> 
+        <button class="top-right" @click="store.menuClick()"> ⋮ </button> 
         <!-- <input type="number" v-model="store.showNext" >
         <label for="showNext">Show Next</label> -->
       </div>
@@ -76,8 +77,8 @@
                 <button v-if="store.cards[1] && store.curser > 0" @click="store.makeSubCard(i, i-1)"> ↓ </button> 
                 <button v-if="store.cards[1] && !store.curser > 0" @click="store.makeSubCard(i, i+1)"> ↓ </button>
                 <button @click="store.makeMainCard(i)"> ↑ </button>
-                <button v-if="store.cards[1] && store.curser > 0" @click="store.swapCards(i, i-1)">&lt;</button> <!-- move cards -->
-                <button v-if="store.cards[1] && store.curser !== store.cards.length - 1" @click="store.swapCards(i, i+1)">&gt;</button>
+                <button v-if="store.cards[1] && store.curser > 0" @click="store.swapCards(i, i-1)">&lt;</button> <!-- < move cards -->
+		<button v-if="store.cards[1] && store.curser !== store.cards.length - 1" @click="store.swapCards(i, i+1)">&gt;</button> <!-- > move cards -->
               </div>
               <div :data-index="i" v-else class="inner" @click="store.curser = i" >
                 <h2 :data-index="i" > {{ card.title }} </h2>

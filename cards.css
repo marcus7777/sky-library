@@ -157,12 +157,11 @@ h1 {
 }*/
 .fab {
   position: fixed;
-  right: 10vh;
+  right: 10vw;
   bottom: 10vh;
-  font-size: 2vh;
   padding: 1%;
-  font-weight: 900;
-  font-size: 200%;
+  font-weight: 600;
+  font-size: 150%;
   border-radius: 50%;
   background-color: #ddd;
   line-height: 20px;
@@ -171,6 +170,18 @@ h1 {
   width: 50px;
   height: 50px;
   z-index: 1000;
+  border: none;
+}
+.top-right {
+  position: fixed;
+  top: 1vh;
+  right: 1vh;
+  font-weight: 900;
+  line-height: 20px;
+  background-color: #0000;
+  cursor: pointer;
+  border: none;
+  font-size: 150%;
 }
 /*.dropDownElements {
   position: relative;
