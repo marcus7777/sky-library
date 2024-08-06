@@ -68,5 +68,8 @@
     "./**/*.{js,cjs,ts,css,scss,sass,html,json,md}": [
       "prettier . --loglevel warn --write "
     ]
+  },
+  "dependencies": {
+    "firebaseui": "^6.1.0"
   }
 }
