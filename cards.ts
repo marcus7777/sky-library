@@ -1,4 +1,4 @@
-import { FORMERR } from 'dns'
+//import { FORMERR } from 'dns'
 import { createApp, reactive } from './petite-vue.es.js'
 import QrCreator from './qr-creator.es6.min.js'
 
