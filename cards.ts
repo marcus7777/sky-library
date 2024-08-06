@@ -1,3 +1,4 @@
+import { FORMERR } from 'dns'
 import { createApp, reactive } from './petite-vue.es.js'
 import QrCreator from './qr-creator.es6.min.js'
 
@@ -7,8 +8,8 @@ function saveCard(hash, card) {
   localStorage.setItem(hash, JSON.stringify(card))
 }
 
-function makeHash(card) {
-  if (!card) return
+function makeHash(card) : string {
+  if (!card) return ""
   if (typeof card === 'string') {
     return card
   }
@@ -37,6 +38,7 @@ function makeHash(card) {
 function savesToLocalStorage(file, cb) { //cb is a callback function that is called when the file is read with the first card
   const reader = new FileReader()
   reader.onload = (e) => {
+    if (e.target === null || e.target.result === null || typeof e.target.result != "string") return
     const cards = e.target.result.split("\n").map(card => JSON.parse(card))
     cards.forEach(card => {
       saveCard(makeHash(card), card)
@@ -64,7 +66,7 @@ const store = reactive({ //updates the html immediately
   },
   cards: [],
   addStyleToMe(i, setTo){ // work in progress
-    const elements = document.getElementsByClassName("outerMainCard")
+    const elements = document.getElementsByClassName("outerMainCard") as HTMLCollectionOf<HTMLElement>
     elements[i].style.order = setTo
   },
   hash(card){
@@ -100,8 +102,8 @@ const store = reactive({ //updates the html immediately
     rootCard.subCards = this.cards.map(card => makeHash(card))
     saveCard(rootHash, rootCard)
   },
-  getAllHashesNeededFrom(hash) {
-    let hashes = []
+  getAllHashesNeededFrom(hash:string) {
+    let hashes : string[] = [];
     let card = this.loadCard(hash)
     if (!card) {
       return []
@@ -116,35 +118,47 @@ const store = reactive({ //updates the html immediately
         hashes.push(subCard)
       }
       if (typeof subCard === "object") {
-        hashes.push( makeHash(subCard) )
+        hashes.push( makeHash(subCard) || "")
       }
       return hashes = hashes.concat(this.getAllHashesNeededFrom(subCard))
     })
     return hashes
   },
   saveToFile(root) {
-    let hashes = []
+    let hashes : string[] = [];
     if (typeof root === 'object') {
       hashes = this.getAllHashesNeededFrom(makeHash(root))
     } else {
       hashes = this.getAllHashesNeededFrom(root)
     }
-    let cards = []
+    let cards : string[] = [];
     hashes.forEach(hash => {
       if (!hash) return
-      cards.push(localStorage.getItem(hash))
+      const card = localStorage.getItem(hash)
+      if (card != null) {
+        cards.push(card)
+      }
+      
     })
     saveFile(cards.filter(card => typeof card === "string" ).join("\n"), root.title || this.  pageTitle || this.title || "Sky Cards")
   },
-  uploadFileInToCard(index) {
+  uploadFileInToCard(index : number) {
     const input = document.createElement('input')
     input.type = 'file'
     input.accept = '.jsonl'
     input.onchange = (e) => {
-      savesToLocalStorage(e.target.files[0], (card) => {
-        this.cards[index].subCards = this.cards[index].subCards.concat([card])
-      })
-    }
+      if (e.target === null) return
+      const target =  e.target as HTMLInputElement
+      if (target.files && target.files !== null && target.files.length) {
+        savesToLocalStorage(target.files[0], (card) => {
+          if (index === -1) {
+            this.root.subCards = this.cards[index].subCards.concat([card])
+          } else {
+            this.cards[index].subCards = this.cards[index].subCards.concat([card])
+          }
+        })
+      }
+    }  
     input.click()
   },
   loadCard(hash) {
@@ -158,7 +172,11 @@ const store = reactive({ //updates the html immediately
       return
     }
 
-    let card = JSON.parse(localStorage.getItem(hash))
+    const tempCard = localStorage.getItem(hash)
+    if (tempCard === null) return
+    let card = JSON.parse(tempCard)
+    
+    
     
     if (!card.subCards) {
       card.subCards = []
@@ -166,7 +184,9 @@ const store = reactive({ //updates the html immediately
     card.subCards = card.subCards.map(subHash => {
       if (!subHash) return
       if (typeof subHash === 'string') {
-        return JSON.parse(localStorage.getItem(subHash))
+        const cardAsString = localStorage.getItem(subHash)
+        if (cardAsString === null) return
+        return JSON.parse(cardAsString)
       }
       return subHash
     })  
@@ -178,11 +198,17 @@ const store = reactive({ //updates the html immediately
       //this.trail = window.location.hash.slice(1).split("/") //this is causing the problem //useless now?
       cardHash = window.location.hash.slice(1).split("/").pop() || "root"
     } 
-    const fresh = window.location.hash.slice(1).split("/").pop().indexOf(cardHash)
+
+    const tempHashCheck = window.location.hash.slice(1).split("/").pop()
+    if (tempHashCheck === undefined) return
+    const fresh = tempHashCheck.indexOf(cardHash)
     
     //this.trail = this.trail.slice(0, fresh)
+
+    const tempCard = localStorage.getItem(cardHash)
+    if (tempCard === null) return
     
-    let rootCard = JSON.parse(localStorage.getItem(cardHash))
+    let rootCard = JSON.parse(tempCard)
     if (!rootCard) {
       rootCard = {...this.newCard}
       saveCard(cardHash, rootCard)
@@ -214,7 +240,9 @@ const store = reactive({ //updates the html immediately
     // save this.cards to local storage hash all cards and save under the hash with a list of hashs for sub cards
     this.cards.forEach(card => {
       if (typeof card === 'string') {
-        card = JSON.parse(localStorage.getItem(card))
+        const tempCard = localStorage.getItem(card)
+        if (tempCard === null) return
+        card = JSON.parse(tempCard)
       }
       if (!card.subCards) {
         card.subCards = []
@@ -234,7 +262,10 @@ const store = reactive({ //updates the html immediately
   deeper(newCurser) {
     this.save()
     let trail = window.location.hash.slice(1).split("/")
-    trail.push(makeHash(this.cards[this.curser]))
+
+    const currentCard = this.cards[this.curser]
+    if (!currentCard || currentCard === undefined) return
+    trail.push(makeHash(currentCard))
 
     window.scrollTo(0, 0)
     window.history.pushState({}, "", "#" + trail.join("/"))
@@ -263,7 +294,9 @@ const store = reactive({ //updates the html immediately
   onEnterTitle(){
     if (!this.newCard.title) return
     if (!this.cards[0]) return this.inc()
-    document.getElementById("mainOrSunDialog").showModal()
+    const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
+    addDialog.showModal()
+
   },
   lastSwap: 0,
   draggingHash: "",
@@ -296,7 +329,9 @@ const store = reactive({ //updates the html immediately
     this.curser = this.cards.length
     this.cards = [...this.cards, {...this.newCard}]
     this.newCard.title = ""
-    document.getElementById("mainOrSunDialog").close()
+    
+    const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
+    addDialog.close()
     this.save()
     setTimeout(() => {
       this.layout()
@@ -306,7 +341,7 @@ const store = reactive({ //updates the html immediately
     let card = this.cards[this.curser]
     if (!card.subCards) {
       // check for an already existing card and load its subcards
-      const cardCheck = loadCard(makeHash(this.newCard))
+      const cardCheck = this.loadCard(makeHash(this.newCard))
       if (cardCheck && cardCheck.subCards) {
         card.subCards = cardCheck.subCards
       } else {
@@ -314,7 +349,8 @@ const store = reactive({ //updates the html immediately
       }
     }
     if (makeHash(card) === makeHash(this.newCard)) {
-      document.getElementById("mainOrSunDialog").close()
+      const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
+      addDialog.close()
       return alert("Don't add sub cards that are the same as the main card")
     }
     this.cards.forEach(cardCheck => {
@@ -325,19 +361,20 @@ const store = reactive({ //updates the html immediately
 
     // card.subCards = card.subCards.concat([{...this.newCard}])
     this.newCard.title = ""
-    document.getElementById("mainOrSunDialog").close()
+    const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
+    addDialog.close()
     this.save()
   },
   distributeCardsCircle() {
     var radius = 35;
-    let cardElements = [... document.getElementsByClassName("outerMainCard")]
+    let cardElements = [... document.getElementsByClassName("outerMainCard")] as HTMLElement[]
     let containers = document.getElementsByClassName("container")
     const container = containers[0]
     container.classList.add("ellipse")
     let angle = -Math.PI/2;
     let step = (2 * Math.PI) / cardElements.length;
 
-    cardElements.forEach(function (card) {
+    cardElements.forEach((card) => {
       const x = Math.round(radius * Math.cos(angle)) + 50
       const y = Math.round(radius * Math.sin(angle)) + 50
       // var size = (Math.round(radius * Math.sin(step))) -9
@@ -355,9 +392,10 @@ const store = reactive({ //updates the html immediately
     
     this.save()
     let rootElement = document.getElementById("root")
+    if (rootElement === null) return
     rootElement.classList.add("ellipse")
     return () => {  //clean Up
-      let cardElements = [... document.getElementsByClassName("outerMainCard")]
+      let cardElements = [... document.getElementsByClassName("outerMainCard")] as HTMLElement[]
       cardElements.forEach(function (card) {
         card.style.left = ""
         card.style.top = ""
@@ -365,6 +403,7 @@ const store = reactive({ //updates the html immediately
       })
       const containers = document.getElementsByClassName("container")
       let container = containers[0]
+      if (rootElement === null) return //annoyingly redundant
       rootElement.classList.remove("ellipse")
       container.classList.remove("ellipse")
     }
@@ -392,7 +431,7 @@ const store = reactive({ //updates the html immediately
   sortByTitle() {
     this.cards.sort((a,b) => {
       if (a.title == b.title) return 0
-      if ((""+a.title == +a.title) && (""+b.title == +b.title)) {
+      if ((""+a.title == +a.title) && (""+b.title == +b.title)) { //ignore this error
         if (+a.title > +b.title) {
           return 1
         }
@@ -417,8 +456,8 @@ const store = reactive({ //updates the html immediately
   },
   setColor() {
     window.location.hash = window.location.hash.slice(1).split("/").pop() || ""
-    const cardToSave = this.loadCard(root)
-    saveCard(root, {...cardToSave, color: this.color})
+    const cardToSave = this.loadCard(this.root)
+    saveCard(this.root, {...cardToSave, color: this.color})
 
     if (!this.root.color) {
       this.root.color = 'white'
@@ -459,16 +498,16 @@ const store = reactive({ //updates the html immediately
       this.cards[index2] = temp
       this.save()
     }
-    if (withFocus) {
-      const elements3 = document.getElementsByClassName("outerMainCard")[this.curser].getElementsByClassName("inner");
+    /*if (withFocus) {
+      const elements3 = document.getElementsByClassName("outerMainCard")[this.curser].getElementsByClassName("inner")
       elements3[0].focus()
-    }
+    }*/
     
     //give focus to the card that was moved
     //swop the cards with a timeout so that the cards are swopped before the focus is given
     window.requestAnimationFrame(() => {
-      const card1 = document.getElementsByClassName("outerMainCard")[index1];
-      const card2 = document.getElementsByClassName("outerMainCard")[index2];
+      const card1 = document.getElementsByClassName("outerMainCard")[index1] as HTMLElement
+      const card2 = document.getElementsByClassName("outerMainCard")[index2] as HTMLElement
       // move cards towards each other
       const card1Left = card1.getBoundingClientRect().left
       const card2Left = card2.getBoundingClientRect().left
@@ -481,10 +520,10 @@ const store = reactive({ //updates the html immediately
         card1.style.transform = ""
         card2.style.transform = ""
         swap()
-        if (withFocus) {
+        /*if (withFocus) {
           const elements3 = document.getElementsByClassName("outerMainCard")[this.curser].getElementsByClassName("inner");
           elements3[0].focus()
-        }
+        }*/
         //update card additions to include this card's weight
         const rootHash = window.location.hash.slice(1).split("/").pop() || 'root'
         let rootCard = this.loadCard(rootHash) //was a const but I changed it because it caused errors (maybe change back?)
@@ -505,7 +544,7 @@ const store = reactive({ //updates the html immediately
         this.save() 
 
       }, 250)
-    }, 0)
+    })
   },
   makeSubCard(index1, index2) {
     if (this.curser === index1) {
@@ -539,12 +578,13 @@ const store = reactive({ //updates the html immediately
     this.layout()
   },
   menuClick() {
-    document.getElementById("menuDialog").showModal()
+    const addDialog = document.getElementById("menuDialog") as HTMLDialogElement
+    addDialog.showModal()
     console.log("Works!?")
 },
   log(e) {
     e.preventDefault()
-    const div = document.createElement("div");
+    const div = document.createElement("div")
     const path = location.protocol + "//" + location.host + location.pathname
     const text = e.target.src.replace(path, "")
     if (text.length < 2000 && text.length > 5) {

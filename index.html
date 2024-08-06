@@ -39,7 +39,7 @@
               <input v-model="store.root.image" @blur="store.save" placeholder="https://image.jpg">
               <input type="checkbox" name="done" :checked="store.root.done" @click="store.root.done = !store.root.done" />
               <button @click="store.saveToFile(store.root)">▼</button>
-              <button @click="store.uploadFileInToCard(i)">▲</button>
+              <button @click="store.uploadFileInToCard(-1)">▲</button>
               <!--<button @click="store.load(store.tr)">↑</button> finish fixing what is the purpose of this at all?-->
               <button v-if="store.root.layout !== 'circle'" @click="store.layout('circle')">O</button>
               <button v-if="store.root.layout !== 'line'" @click="store.layout('line')">-</button>
