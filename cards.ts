@@ -580,8 +580,15 @@ const store = reactive({ //updates the html immediately
   menuClick() {
     const addDialog = document.getElementById("menuDialog") as HTMLDialogElement
     addDialog.showModal()
-    console.log("Works!?")
-},
+  },
+  addClick() {
+    const addDialog = document.getElementById("addDialog") as HTMLDialogElement
+    addDialog.showModal()
+  },
+  closeDialog(dialog) {
+    const addDialog = document.getElementById(dialog) as HTMLDialogElement
+    addDialog.close()
+  },
   log(e) {
     e.preventDefault()
     const div = document.createElement("div")

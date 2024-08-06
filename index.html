@@ -12,16 +12,6 @@
       <div>
         <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
 
-        <!--<button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
-        <button v-if="store.cards[0] && store.newCard.title" @click="store.incSub()"> + Sub </button>
-        <button @click="store.load()"> Top </button>-->
-        <!--<button v-for="(breadcrumb, i) in store.trail" @click="store.load(breadcrumb)"> {{ store.trailNames[i] }} </button>-->
-        <!--<button @click="store.saveToFile('root')">▼</button>
-      
-        <input type="checkbox" name="hideDone" :checked="store.hideDone" @click="store.hideDone = !store.hideDone" />
-
-        <label for="hideDone">Hide Done</label>-->
-
         <button class="fab"       @click="store.addClick()" > + </button> 
         <button class="top-right" @click="store.menuClick()"> ⋮ </button> 
         <!-- <input type="number" v-model="store.showNext" >
@@ -109,6 +99,7 @@
         </dialog>
         <dialog id="menuDialog">
           <div>
+            <button @click="store.closeDialog('menuDialog')">x</button>
             <!--<input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
             <button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
             <button v-if="store.cards[0] && store.newCard.title" @click="store.incSub()"> + Sub </button>-->
@@ -120,6 +111,19 @@
             <label for="hideDone">Hide Done</label>
             
             <!-- <input type="number" v-model="store.showNext" >
+            <label for="showNext">Show Next</label> -->
+          </div>
+        </dialog>
+
+        <dialog id="addDialog">
+          <div>
+            <button @click="store.closeDialog('addDialog')">x</button>
+            <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
+            <button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
+            <button v-if="store.cards[0] && store.newCard.title" @click="store.incSub()"> + Sub </button>
+            <button v-for="(breadcrumb, i) in store.trail" @click="store.load(breadcrumb)"> {{ store.trailNames[i] }} </button>
+            
+            <!--<input type="number" v-model="store.showNext" >
             <label for="showNext">Show Next</label> -->
           </div>
         </dialog>
