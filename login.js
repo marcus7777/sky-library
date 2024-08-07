@@ -219,10 +219,10 @@ function handleConfigChange() {
  * Initializes the app.
  */
 var initApp = function() {
-  document.getElementById('sign-in-with-redirect').addEventListener(
+  /*document.getElementById('sign-in-with-redirect').addEventListener(
       'click', signInWithRedirect);
   document.getElementById('sign-in-with-popup').addEventListener(
-      'click', signInWithPopup);
+      'click', signInWithPopup);*/
   document.getElementById('sign-out').addEventListener('click', function() {
     firebase.auth().signOut();
   });
@@ -230,7 +230,7 @@ var initApp = function() {
       'click', function() {
         deleteAccount();
       });
-
+/*
   document.getElementById('recaptcha-normal').addEventListener(
       'change', handleConfigChange);
   document.getElementById('recaptcha-invisible').addEventListener(
@@ -255,7 +255,7 @@ var initApp = function() {
   document.getElementById('admin-restricted-operation-status').addEventListener(
       'change', handleConfigChange);
   document.getElementById("admin-restricted-operation-status").checked =
-      getAdminRestrictedOperationStatus();  
+      getAdminRestrictedOperationStatus();  */
 };
 
-window.addEventListener('load', initApp);
+window.addEventListener('load', initApp());

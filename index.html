@@ -64,6 +64,8 @@
                 <button @click="store.duplicateCard(i)">+</button>
                 <button @click="store.saveToFile(card)">▼</button>
                 <button @click="store.uploadFileInToCard(i)">▲</button>
+                <button @click="store.saveToFileCloud(card)">▼ᯤ</button>
+                <button @click="store.uploadFileInToCardCloud(i)">▲ᯤ</button>
                 <button v-if="store.cards[1] && store.curser > 0" @click="store.makeSubCard(i, i-1)"> ↓ </button> 
                 <button v-if="store.cards[1] && !store.curser > 0" @click="store.makeSubCard(i, i+1)"> ↓ </button>
                 <button @click="store.makeMainCard(i)"> ↑ </button>
@@ -109,6 +111,8 @@
           
             <input type="checkbox" name="hideDone" :checked="store.hideDone" @click="store.hideDone = !store.hideDone" />
             <label for="hideDone">Hide Done</label>
+
+            <iframe href="login.html" title="Login"></iframe> <!--doesn't work because we use http?-->
             
             <!-- <input type="number" v-model="store.showNext" >
             <label for="showNext">Show Next</label> -->
