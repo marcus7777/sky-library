@@ -65,6 +65,9 @@
                 <button @click="store.saveToFile(card)">▼</button>
                 <button @click="store.uploadFileInToCard(i)">▲</button>
                 <button @click="store.saveToFileCloud(card)">▼ᯤ</button>
+                <!--<fb-upload ref="upload" v-model="files" :meta="meta" :uid="user.uid" @uploading="updateUploading">
+                  <button @click="$refs.upload.selectFile()" >▲ᯤ</button> 
+                </fb-upload>-->
                 <button @click="store.uploadFileInToCardCloud(i)">▲ᯤ</button>
                 <button v-if="store.cards[1] && store.curser > 0" @click="store.makeSubCard(i, i-1)"> ↓ </button> 
                 <button v-if="store.cards[1] && !store.curser > 0" @click="store.makeSubCard(i, i+1)"> ↓ </button>
@@ -112,7 +115,6 @@
             <input type="checkbox" name="hideDone" :checked="store.hideDone" @click="store.hideDone = !store.hideDone" />
             <label for="hideDone">Hide Done</label>
 
-            <iframe href="login.html" title="Login"></iframe> <!--doesn't work because we use http?-->
             
             <!-- <input type="number" v-model="store.showNext" >
             <label for="showNext">Show Next</label> -->
@@ -126,10 +128,10 @@
             <button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
             <button v-if="store.cards[0] && store.newCard.title" @click="store.incSub()"> + Sub </button>
             <button v-for="(breadcrumb, i) in store.trail" @click="store.load(breadcrumb)"> {{ store.trailNames[i] }} </button>
-            
+          </div>
             <!--<input type="number" v-model="store.showNext" >
             <label for="showNext">Show Next</label> -->
-          </div>
+          <iframe src="login.html" style="border:0px #ffffff none;" name="upload" frameborder="1" marginheight="0px" marginwidth="0px" height="240px" width="400px" allowfullscreen></iframe>
         </dialog>
       </div>
     </div>

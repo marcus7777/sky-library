@@ -2,6 +2,19 @@
 import { createApp, reactive } from './petite-vue.es.js'
 import QrCreator from './qr-creator.es6.min.js'
 
+/*import firebase from 'firebase/app'//for uploading to firebase
+import 'firebase/storage'
+
+const firebaseConfig = { //redundant replace when it works
+  apiKey: "AIzaSyCnaZyRwfSwC5lqkNiLFwhR5CGaFLLQQe4",
+  authDomain: "sky-cards.firebaseapp.com",
+  projectId: "sky-cards",
+  storageBucket: "sky-cards.appspot.com",
+  messagingSenderId: "242787438513",
+  appId: "1:242787438513:web:bb5839a0a17017f93a3790"
+}
+firebase.initializeApp(firebaseConfig) //redundant replace when it works*/
+
 function saveCard(hash, card) {
   if (!hash) return window.alert("no hash")
   if (!card) return window.alert("no card")
@@ -160,6 +173,45 @@ const store = reactive({ //updates the html immediately
       }
     }  
     input.click()
+  },
+  saveToFileCloud(root) { //copied from saveToFile
+    /*let hashes : string[] = [];
+    if (typeof root === 'object') {
+      hashes = this.getAllHashesNeededFrom(makeHash(root))
+    } else {
+      hashes = this.getAllHashesNeededFrom(root)
+    }
+    let cards : string[] = [];
+    hashes.forEach(hash => {
+      if (!hash) return
+      const card = localStorage.getItem(hash)
+      if (card != null) {
+        cards.push(card)
+      }
+    })
+    const stringToStore = cards.filter(card => typeof card === "string" ).join("\n")
+    const fileName = root.title || this.  pageTitle || this.title || "Sky Cards"
+
+    //storageRef.putString(stringToStore, fileName).then(snapshot => {*/
+
+    /*const storageRef = firebase.storage().ref();
+
+    document.getElementById('fileInput').addEventListener('change', event => {
+    const file = event.target.files[0];
+    const storageRef = firebase.storage().ref('path/to/file');
+   const task = storageRef.put(file);
+
+    task.on('state_changed', progress => {
+      console.log('Upload is ' + progress.snapshot.bytesTransferred / progress.snapshot.totalBytes * 100 + '% complete');
+    }, error => {
+      console.log(error.message);
+    }, complete => {
+      console.log('Upload complete!');
+    });
+  });*///doesn't work
+  },
+  uploadFileInToCardCloud(index : number) {
+
   },
   loadCard(hash) {
     if (typeof hash === 'object') {
