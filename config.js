@@ -19,10 +19,9 @@ var config = {
   storageBucket: "sky-cards.appspot.com",
   messagingSenderId: "242787438513",
   appId: "1:242787438513:web:bb5839a0a17017f93a3790"
+};
 
-  };
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
   
-  var CLIENT_ID =
-      '265939374336-cj26lol6s990fq9fp4s0ri86si3rj86n.apps.googleusercontent.com';
+var CLIENT_ID = '242787438513-t3btmgc0sefc6pk5v0hvccjoce97oct1.apps.googleusercontent.com';
   
