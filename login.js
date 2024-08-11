@@ -111,6 +111,31 @@ var handleSignedInUser = function(user) {
   document.getElementById('name').textContent = user.displayName;
   document.getElementById('email').textContent = user.email;
   document.getElementById('phone').textContent = user.phoneNumber;
+  document.getElementById('file-upload').onchange = function(event) {
+    var file = event.target.files[0];
+    var storageRef = firebase.storage().ref();
+    var user = firebase.auth().currentUser;	
+    // prepare metadata
+    var metadata = {
+     userId: user.uid,
+     contentType: file.type
+    };
+    // upload file
+    storageRef.child('images/' + file.name).put(file, metadata).then(function(snapshot) {
+      console.log('Uploaded', snapshot.totalBytes, 'bytes.');
+      console.log(snapshot.metadata);
+      var url = snapshot.downloadURL;
+      console.log('File available at', url);
+    }).catch(function(error) {
+      console.error('Upload failed:', error);
+    });
+  };
+
+  document.getElementById('file-upload-button').onclick = function() {
+    //look at the file input
+    var storageRef = firebase.storage().ref();
+    // get user id
+     
   if (user.photoURL) {
     var photoURL = user.photoURL;
     // Append size to the photo URL for Google hosted images to avoid requesting
@@ -140,12 +165,17 @@ var handleSignedOutUser = function() {
 
 // Listen to change in auth state so it displays the correct UI for when
 // the user is signed in or not.
+
 firebase.auth().onAuthStateChanged(function(user) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('loaded').style.display = 'block';
   user ? handleSignedInUser(user) : handleSignedOutUser();
-
+  if (!user) return
   console.log(firebase)
+  
+  var storageRef = firebase.storage().ref();
+  console.log(storageRef)
+  var imagesRef = storageRef.child('images');
 });
 
 /**
