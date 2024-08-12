@@ -121,7 +121,7 @@ var handleSignedInUser = function(user) {
      contentType: file.type
     };
     // upload file
-    storageRef.child('userUpload/' + file.name).put(file, metadata).then(function(snapshot) {
+    storageRef.child('userUploads/' + file.name).put(file, metadata).then(function(snapshot) {
       console.log('Uploaded', snapshot.totalBytes, 'bytes.');
       console.log(snapshot.metadata);
       var url = snapshot.downloadURL;
