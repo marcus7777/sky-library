@@ -27,8 +27,9 @@ function getUiConfig() {
         if (authResult.user) {
           handleSignedInUser(authResult.user);
         }
-        if (authResult.additionalUserInfo) {
-          document.getElementById('is-new-user').textContent =
+        const isNewUser = document.getElementById('is-new-user')//to make typescript work
+        if (authResult.additionalUserInfo && isNewUser !== null) {
+          isNewUser.textContent =
               authResult.additionalUserInfo.isNewUser ?
               'New User' : 'Existing User';
         }
@@ -59,9 +60,10 @@ function getUiConfig() {
     'tosUrl': 'https://www.google.com',
     // Privacy policy url.
     'privacyPolicyUrl': 'https://www.google.com',
-    'credentialHelper': CLIENT_ID && CLIENT_ID != 'YOUR_OAUTH_CLIENT_ID' ?
+    'credentialHelper': firebaseui.auth.CredentialHelper.NONE,
+    /*'credentialHelper': CLIENT_ID && CLIENT_ID != 'YOUR_OAUTH_CLIENT_ID' ?
         firebaseui.auth.CredentialHelper.GOOGLE_YOLO :
-        firebaseui.auth.CredentialHelper.NONE,
+        firebaseui.auth.CredentialHelper.NONE,*/
     'adminRestrictedOperation': {
       status: getAdminRestrictedOperationStatus()
     }
@@ -122,6 +124,7 @@ var handleSignedInUser = function(user) {
     };
     // upload file
     storageRef.child('userUploads/' + file.name).put(file, metadata).then(function(snapshot) {
+      console.log(snapshot)
       console.log('Uploaded', snapshot.totalBytes, 'bytes.');
       console.log(snapshot.metadata);
       var url = snapshot.downloadURL;

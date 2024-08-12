@@ -61,10 +61,8 @@ h1 {
   font-family: 'Zapfino';
   font-weight: normal;
   font-style: italic;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-p,h2 {
+p,h3,h2,h1 {
   overflow: hidden;
   text-overflow: ellipsis;
 }
