@@ -244,7 +244,7 @@ const store = reactive({ //updates the html immediately
     })  
     return card
   },
-  load(cardHash) {
+  load(cardHash,newCurser) {
     // load cards from local storage
     if (!cardHash) {
       //this.trail = window.location.hash.slice(1).split("/") //this is causing the problem //useless now?
@@ -284,6 +284,7 @@ const store = reactive({ //updates the html immediately
       subCard.subCards = subSubCards
     })
     this.cards = subCards
+    this.curser = newCurser || 0
   },
   save() {
     // save the root card to local storage
@@ -313,9 +314,17 @@ const store = reactive({ //updates the html immediately
   },
   shallower() {
     const newTrail = window.location.hash.slice(1).split("/")
-    newTrail.pop()
+    const fresh = newTrail.pop()
     window.history.pushState({}, "", "#" + newTrail.join("/"))
     this.load()
+    const newCurser = this.cards.reduce((curser, card, index) => {
+      console.log(curser,card,fresh,makeHash(card))
+      if (fresh === makeHash(card)) {
+        return index
+      } 
+      return curser
+    }, 0) // imperfect solution (confuses if there is more than one card witht he same hash)
+    this.curser = newCurser
   },
   deeper(newCurser) {
     this.save()
