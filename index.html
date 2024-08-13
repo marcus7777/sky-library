@@ -21,10 +21,11 @@
       <div id="root">
         <div class="rootContainer">
           <div class="card rootCard" v-if="!(store.hideDone && store.root.done)">
-            <div class="inner curser form" tabindex="0">
+            <div class="inner curser form" tabindex="0" v-if="store.curser === -1">
               <input v-model="store.root.title" @blur="store.save" @keyup.enter="store.save">
               <h2> {{ store.root.title }}</h2>
               <input v-model="store.root.body" @blur="store.save" placeholder="text">
+              <p :data-index="-1" > {{ store.root.body }} </p>
               <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
               <video v-if="store.getDataType(card.image)=='video'" controls :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
               <input v-if="store.getDataType(card.image)=='video'"  v-model="card.thumbnail" @blur="store.save" placeholder="https://image.jpg">
@@ -39,6 +40,13 @@
               <button @click="store.sortByTitle">So</button>
               <button @click="store.shuffle">Sh</button>
               <input type="color" name="color" v-model="store.root.color" @change="store.setColor()"/>
+            </div>
+            <div :data-index="-1" v-else class="inner small" @click="store.curser = -1" >
+              <h2 :data-index="-1" > {{ store.root.title }} </h2>
+              <p :data-index="-1" > {{ store.root.body }} </p>
+              <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
+              <video v-if="store.getDataType(card.image)=='video'" :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
+              <img v-if="store.getDataType(card.image)=='QrCode'" :src="store.makeQrCode(card.image)"/>
             </div>
           </div>
         </div>
@@ -60,6 +68,7 @@
                 <input v-model="card.title" @blur="store.save" @keyup.enter="store.save">
                 <h2> {{ card.title }} </h2>
                 <input v-model="card.body" @blur="store.save" placeholder="text">
+                <p :data-index="i" > {{ card.body }} </p>
                 <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
                 <video v-if="store.getDataType(card.image)=='video'" controls :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
                 <input v-if="store.getDataType(card.image)=='video'"  v-model="card.thumbnail" @blur="store.save" placeholder="https://image.jpg">

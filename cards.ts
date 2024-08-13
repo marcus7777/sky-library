@@ -312,12 +312,10 @@ const store = reactive({ //updates the html immediately
     })
   },
   shallower() {
-
     const newTrail = window.location.hash.slice(1).split("/")
     newTrail.pop()
     window.history.pushState({}, "", "#" + newTrail.join("/"))
     this.load()
-
   },
   deeper(newCurser) {
     this.save()
@@ -678,8 +676,14 @@ document.onkeydown = function (e) {
   e = e || window.event;
   // use e.keyCode
   if(e.keyCode == 38) store.shallower()
-  if(e.keyCode == 40) store.deeper(store.curser)
-  if(e.keyCode == 37) store.curser =Math.max(store.curser -1,0)
+  if(e.keyCode == 40) {
+    if (store.curser == -1) store.curser = 0
+    else {
+      store.deeper(store.curser)
+      store.curser = 0
+    }
+  }
+  if(e.keyCode == 37) store.curser =Math.max(store.curser -1,-1)
   if(e.keyCode == 39) store.curser =Math.min(store.curser +1, store.cards.length-1)
 }
 createApp({
