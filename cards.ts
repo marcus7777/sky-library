@@ -2,18 +2,6 @@
 import { createApp, reactive } from './petite-vue.es.js'
 import QrCreator from './qr-creator.es6.min.js'
 
-/*import firebase from 'firebase/app'//for uploading to firebase
-import 'firebase/storage'
-
-const firebaseConfig = { //redundant replace when it works
-  apiKey: "AIzaSyCnaZyRwfSwC5lqkNiLFwhR5CGaFLLQQe4",
-  authDomain: "sky-cards.firebaseapp.com",
-  projectId: "sky-cards",
-  storageBucket: "sky-cards.appspot.com",
-  messagingSenderId: "242787438513",
-  appId: "1:242787438513:web:bb5839a0a17017f93a3790"
-}
-firebase.initializeApp(firebaseConfig) //redundant replace when it works*/
 function saveCard(hash, card) {
   if (!hash) return window.alert("no hash")
   if (!card) return window.alert("no card")
@@ -389,12 +377,18 @@ const store = reactive({ //updates the html immediately
     this.curser = to
     //this.distributeCardsCircle
   },
+  resetNewCard(){
+    this.newCard.title = ""
+    this.newCard.image = ""
+    this.newCard.body  = ""
+
+  },
   inc() {
     //this.curser++
     //this.cards = [...this.cards.slice(0, this.curser), {...this.newCard}, ...this.cards.slice(this.curser)]
     this.curser = this.cards.length
     this.cards = [...this.cards, {...this.newCard}]
-    this.newCard.title = ""
+    this.resetNewCard()
     
     const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
     addDialog.close()
@@ -426,7 +420,7 @@ const store = reactive({ //updates the html immediately
     })
 
     // card.subCards = card.subCards.concat([{...this.newCard}])
-    this.newCard.title = ""
+    this.resetNewCard()
     const addDialog = document.getElementById("mainOrSunDialog") as HTMLDialogElement
     addDialog.close()
     this.save()
@@ -538,7 +532,6 @@ const store = reactive({ //updates the html immediately
       if (this.newCard.title.includes(trigger) && this.newCard.title.indexOf(trigger) === this.newCard.title.length - trigger.length){
         this.newCard.title = this.newCard.title.slice(0, -trigger.length)
         this.inc() 
-        this.newCard.title = ''
         //document.getElementById('title').select() // this does not work on my Chromebook whilst dictating so not using it to Four now
       }
     })
@@ -547,7 +540,6 @@ const store = reactive({ //updates the html immediately
       if (this.newCard.title.includes(trigger) && this.newCard.title.indexOf(trigger) === this.newCard.title.length - trigger.length){
         this.newCard.title = this.newCard.title.slice(0, -trigger.length)
         this.incSub() 
-        this.newCard.title = ''
         //document.getElementById('title').select() // this does not work on my Chromebook whilst dictating so not using it to Four now
       }
     })
@@ -659,7 +651,7 @@ const store = reactive({ //updates the html immediately
     if (url == "") return ""
     const dataType = getUrlExtension(url)
     if (dataType == "mp4") return "video"
-    if (dataType == "jpeg") return "image"
+    if (dataType == "jpeg" || dataType == "svg" || dataType == "webp") return "image"
     if (url.length < 2000 && url.length > 5) return "QrCode"
     if (dataType == url) return ""
     return "image"
@@ -701,7 +693,6 @@ createApp({
 store.load()
 
 window.addEventListener("message", (e) => {
-  console.log(e)
   store.newCard.image = e.data
 })
 
