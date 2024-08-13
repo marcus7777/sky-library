@@ -123,12 +123,18 @@ var handleSignedInUser = function(user) {
      contentType: file.type
     };
     // upload file
-    storageRef.child('userUploads/' + file.name).put(file, metadata).then(function(snapshot) {
+    const fileRef = storageRef.child('userUploads/' + file.name)
+    fileRef.put(file, metadata).then(function(snapshot) {
       console.log(snapshot)
       console.log('Uploaded', snapshot.totalBytes, 'bytes.');
       console.log(snapshot.metadata);
       var url = snapshot.downloadURL;
       console.log('File available at', url);
+      fileRef.getDownloadURL().then((url) => {
+        console.log("!!!! !!!  !!", url)
+        const channel = new MessageChannel();
+        channel.port1.postMessage(url)
+      })
     }).catch(function(error) {
       console.error('Upload failed:', error);
     });

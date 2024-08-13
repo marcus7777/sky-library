@@ -318,7 +318,6 @@ const store = reactive({ //updates the html immediately
     window.history.pushState({}, "", "#" + newTrail.join("/"))
     this.load()
     const newCurser = this.cards.reduce((curser, card, index) => {
-      console.log(curser,card,fresh,makeHash(card))
       if (fresh === makeHash(card)) {
         return index
       } 
@@ -700,6 +699,12 @@ createApp({
   store
 }).mount()
 store.load()
+
+window.addEventListener("message", (e) => {
+  console.log(e)
+  store.newCard.image = e.data
+})
+
 setInterval(() => {
   store.autoAdd()
 }, 1000)
