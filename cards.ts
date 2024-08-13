@@ -90,7 +90,6 @@ const store = reactive({ //updates the html immediately
     // look at the card and decide if it should be shown in the main list
     // trail is the path to the current card
     const topTrail = window.location.hash.slice(1).split("/").slice(0, -1)[0]
-    console.log("topTrail", topTrail)
     if (!card) {
       return false
     }
@@ -313,8 +312,10 @@ const store = reactive({ //updates the html immediately
     })
   },
   shallower() {
-    const topTrail = window.location.hash.slice(1).split("/").slice(0, -1)[0] || ""
-    window.history.pushState({}, "", "#" + topTrail)
+
+    const newTrail = window.location.hash.slice(1).split("/")
+    newTrail.pop()
+    window.history.pushState({}, "", "#" + newTrail.join("/"))
     this.load()
 
   },
@@ -324,9 +325,7 @@ const store = reactive({ //updates the html immediately
 
     const currentCard = this.cards[this.curser]
     if (!currentCard || currentCard === undefined) return
-    console.log(trail)
     trail.push(makeHash(currentCard))
-    console.log(trail.join("/"))
 
     window.scrollTo(0, 0)
     window.history.pushState({}, "", "#" + trail.join("/"))
@@ -653,7 +652,6 @@ const store = reactive({ //updates the html immediately
   getDataType(url) {
     if (url == "") return ""
     const dataType = getUrlExtension(url)
-    console.log(url, dataType)
     if (dataType == "mp4") return "video"
     if (dataType == "jpeg") return "image"
     if (url.length < 2000 && url.length > 5) return "QrCode"
@@ -670,7 +668,6 @@ const store = reactive({ //updates the html immediately
       background: null, // color or null for transparent
       size: 150,
     }, div)
-    console.log("!!!!!", div.children[0].toDataURL())
     return div.children[0].toDataURL()
   },
   log(e) { //this may be causing problems
