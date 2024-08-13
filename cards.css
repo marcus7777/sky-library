@@ -188,6 +188,13 @@ p,h3,h2,h1 {
   border: none;
   font-size: 150%;
 }
+img,
+video {
+  max-width: 100%;
+}
+.inner.small{
+  max-width: 100px
+}
 /*.dropDownElements {
   position: relative;
   bottom: 100%; 

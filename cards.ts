@@ -14,13 +14,14 @@ const firebaseConfig = { //redundant replace when it works
   appId: "1:242787438513:web:bb5839a0a17017f93a3790"
 }
 firebase.initializeApp(firebaseConfig) //redundant replace when it works*/
-
 function saveCard(hash, card) {
   if (!hash) return window.alert("no hash")
   if (!card) return window.alert("no card")
   localStorage.setItem(hash, JSON.stringify(card))
 }
-
+function getUrlExtension( url ) {
+  return url.split(/[#?]/)[0].split('.').pop().trim();
+}
 function makeHash(card) : string {
   if (!card) return ""
   if (typeof card === 'string') {
@@ -310,6 +311,12 @@ const store = reactive({ //updates the html immediately
       
       saveCard(cardHash, {...card, subCards: subHashes})
     })
+  },
+  shallower() {
+    const topTrail = window.location.hash.slice(1).split("/").slice(0, -1)[0] || ""
+    window.history.pushState({}, "", "#" + topTrail)
+    this.load()
+
   },
   deeper(newCurser) {
     this.save()
@@ -641,28 +648,41 @@ const store = reactive({ //updates the html immediately
     const addDialog = document.getElementById(dialog) as HTMLDialogElement
     addDialog.close()
   },
-  log(e) {
-    e.preventDefault()
+  getDataType(url) {
+    if (url == "") return ""
+    const dataType = getUrlExtension(url)
+    console.log(url, dataType)
+    if (dataType == "mp4") return "video"
+    if (dataType == "jpeg") return "image"
+    if (url.length < 2000 && url.length > 5) return "QrCode"
+    if (dataType == url) return ""
+    return "image"
+  },
+  makeQrCode(text) {
     const div = document.createElement("div")
-    const path = location.protocol + "//" + location.host + location.pathname
-    const text = e.target.src.replace(path, "")
-    if (text.length < 2000 && text.length > 5) {
-      QrCreator.render({
-        text,
-        radius: 0.5, // 0.0 to 0.5
-        ecLevel: 'L', // L, M, Q, H
-        fill: '#000',
-        background: null, // color or null for transparent
-        size: 150,
-      }, div)
-      e.target.src = div.children[0].toDataURL()
-    }
-
-    // e.target.replaceWith(div) // this does not work with petite-vue
-    
+    QrCreator.render({ //TODO move to its own function
+      text,
+      radius: 0.5, // 0.0 to 0.5
+      ecLevel: 'L', // L, M, Q, H
+      fill: '#000',
+      background: null, // color or null for transparent
+      size: 150,
+    }, div)
+    console.log("!!!!!", div.children[0].toDataURL())
+    return div.children[0].toDataURL()
+  },
+  log(e) { //this may be causing problems
+    console.warn(e)
   },
 })
-
+document.onkeydown = function (e) {
+  e = e || window.event;
+  // use e.keyCode
+  if(e.keyCode == 38) store.shallower()
+  if(e.keyCode == 40) store.deeper(store.curser)
+  if(e.keyCode == 37) store.curser =Math.max(store.curser -1,0)
+  if(e.keyCode == 39) store.curser =Math.min(store.curser +1, store.cards.length-1)
+}
 createApp({
   // share it with app scopes
   store

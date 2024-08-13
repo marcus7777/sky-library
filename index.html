@@ -25,7 +25,10 @@
               <input v-model="store.root.title" @blur="store.save" @keyup.enter="store.save">
               <h2> {{ store.root.title }}</h2>
               <input v-model="store.root.body" @blur="store.save" placeholder="text">
-              <img v-if="store.root.image" :src="store.root.image" @error="store.log"/>
+              <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
+              <video v-if="store.getDataType(card.image)=='video'" controls :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
+              <input v-if="store.getDataType(card.image)=='video'"  v-model="card.thumbnail" @blur="store.save" placeholder="https://image.jpg">
+              <img v-if="store.getDataType(card.image)=='QrCode'" :src="store.makeQrCode(card.image)"/>
               <input v-model="store.root.image" @blur="store.save" placeholder="https://image.jpg">
               <input type="checkbox" name="done" :checked="store.root.done" @click="store.root.done = !store.root.done" />
               <button @click="store.saveToFile(store.root)">▼</button>
@@ -57,7 +60,10 @@
                 <input v-model="card.title" @blur="store.save" @keyup.enter="store.save">
                 <h2> {{ card.title }} </h2>
                 <input v-model="card.body" @blur="store.save" placeholder="text">
-                <img v-if="card.image" :src="card.image" @error="store.log"/>
+                <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
+                <video v-if="store.getDataType(card.image)=='video'" controls :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
+                <input v-if="store.getDataType(card.image)=='video'"  v-model="card.thumbnail" @blur="store.save" placeholder="https://image.jpg">
+                <img v-if="store.getDataType(card.image)=='QrCode'" :src="store.makeQrCode(card.image)"/>
                 <input v-model="card.image" @blur="store.save" placeholder="https://image.jpg">
                 <input type="checkbox" name="done" :checked="card.done" @click="card.done = !card.done" />
                 <button @click="store.removeCard(i)">-</button>
@@ -75,10 +81,12 @@
                 <button v-if="store.cards[1] && store.curser > 0" @click="store.swapCards(i, i-1)">&lt;</button> <!-- < move cards -->
 		<button v-if="store.cards[1] && store.curser !== store.cards.length - 1" @click="store.swapCards(i, i+1)">&gt;</button> <!-- > move cards -->
               </div>
-              <div :data-index="i" v-else class="inner" @click="store.curser = i" >
+              <div :data-index="i" v-else class="inner small" @click="store.curser = i" >
                 <h2 :data-index="i" > {{ card.title }} </h2>
                 <p :data-index="i" > {{ card.body }} </p>
-                <img :data-index="i" v-if="card.image" :src="card.image" @error="store.log" />
+                <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
+                <video v-if="store.getDataType(card.image)=='video'" :poster="card.thumbnail"><source :src="card.image" type="video/mp4"> </video>
+                <img v-if="store.getDataType(card.image)=='QrCode'" :src="store.makeQrCode(card.image)"/>
               </div>
             </div>
           </div>
