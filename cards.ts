@@ -324,7 +324,9 @@ const store = reactive({ //updates the html immediately
 
     const currentCard = this.cards[this.curser]
     if (!currentCard || currentCard === undefined) return
+    console.log(trail)
     trail.push(makeHash(currentCard))
+    console.log(trail.join("/"))
 
     window.scrollTo(0, 0)
     window.history.pushState({}, "", "#" + trail.join("/"))
@@ -514,7 +516,7 @@ const store = reactive({ //updates the html immediately
 
   },
   setColor() {
-    window.location.hash = window.location.hash.slice(1).split("/").pop() || ""
+    //window.location.hash = window.location.hash.slice(1).split("/").pop() || ""
     const cardToSave = this.loadCard(this.root)
     saveCard(this.root, {...cardToSave, color: this.color})
 
