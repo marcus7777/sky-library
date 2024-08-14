@@ -108,25 +108,27 @@ var signInWithPopup = function() {
  * @param {!firebase.User} user
  */
 var handleSignedInUser = function(user) {
-  document.getElementById('user-signed-in').style.display = 'block';
-  document.getElementById('user-signed-out').style.display = 'none';
-  document.getElementById('name').textContent = user.displayName;
-  document.getElementById('email').textContent = user.email;
-  document.getElementById('phone').textContent = user.phoneNumber;
-  document.getElementById('file-upload').onchange = function(event) {
-    var file = event.target.files[0];
-    var storageRef = firebase.storage().ref();
-    var user = firebase.auth().currentUser;	
+  document.getElementById('user-signed-in').style.display = 'block'
+  document.getElementById('user-signed-out').style.display = 'none'
+  document.getElementById('name').textContent = user.displayName
+  document.getElementById('email').textContent = user.email
+  document.getElementById('phone').textContent = user.phoneNumber
+  const fileUploadElement = document.getElementById('file-upload')
+  fileUploadElement.onchange = function(event) {
+    var file = event.target.files[0]
+    var storageRef = firebase.storage().ref()
+    var user = firebase.auth().currentUser
     // prepare metadata
     var metadata = {
      userId: user.uid,
      contentType: file.type
-    };
+    }
     // upload file
     const fileRef = storageRef.child('userUploads/' + file.name)
     fileRef.put(file, metadata).then(function(snapshot) {
       fileRef.getDownloadURL().then((url) => {
 	window.parent.postMessage(url)
+	fileUploadElement.value = ''
       })
     }).catch(function(error) {
       console.error('Upload failed:', error);
