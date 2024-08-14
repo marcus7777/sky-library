@@ -138,10 +138,21 @@
         <dialog id="addDialog">
           <div>
             <button @click="store.closeDialog('addDialog')">x</button>
-            <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
+            <h2> {{ store.newCard.title }} </h2>
+            <p> {{ store.newCard.body }} </p>
+            <img v-if="store.getDataType(store.newCard.image)=='image'" :src="store.newCard.image" @error="store.log"/>
+            <video v-if="store.getDataType(store.newCard.image)=='video'" controls :poster="store.newCard.thumbnail"><source :src="store.newCard.image" type="video/mp4"> </video>
+            <img v-if="store.getDataType(store.newCard.image)=='QrCode'" :src="store.makeQrCode(store.newCard.image)"/>
+            <button @click="store.uploadFileInToCard(-1)">▲</button>
             <button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
             <button v-if="store.cards[0] && store.newCard.title && store.curser > -1" @click="store.incSub()"> + Sub </button>
             <button v-for="(breadcrumb, i) in store.trail" @click="store.load(breadcrumb)"> {{ store.trailNames[i] }} </button>
+
+            <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()" placeholder="title">
+            <input v-model="store.newCard.body" @blur="store.save" placeholder="text">
+            <input v-if="store.getDataType(store.newCard.image)=='video'"  v-model="store.newCard.thumbnail" @blur="store.save" placeholder="https://image.jpg">
+            <input v-model="store.newCard.image" @blur="store.save" placeholder="https://image.jpg">
+            <input type="color" name="color" v-model="store.newCard.color" @change="store.setColor()"/>
           </div>
             <!--<input type="number" v-model="store.showNext" >
             <label for="showNext">Show Next</label> -->
