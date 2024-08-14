@@ -259,7 +259,7 @@ const store = reactive({ //updates the html immediately
     this.color = rootCard.color
     this.title = rootCard.title
     this.root = {...rootCard}
-    this.layout()
+    this.layout(this.root.layout)
     this.setColor()
     const subCards = rootCard.subCards.map(subHash => this.loadCard(subHash))
     // rootCard.subCards = subCards
@@ -312,6 +312,7 @@ const store = reactive({ //updates the html immediately
       return curser
     }, 0) // imperfect solution (confuses if there is more than one card witht he same hash)
     this.curser = newCurser
+    this.layout(this.root.layout)
   },
   deeper(newCurser) {
     this.save()
@@ -344,6 +345,7 @@ const store = reactive({ //updates the html immediately
       return card
     })
     this.curser = newCurser
+    this.layout(this.root.layout)
   },
   onEnterTitle(){
     if (!this.newCard.title) return
@@ -394,7 +396,7 @@ const store = reactive({ //updates the html immediately
     addDialog.close()
     this.save()
     setTimeout(() => {
-      this.layout()
+      this.layout(this.root.layout)
     }, 100)
   },
   incSub() {
@@ -516,8 +518,8 @@ const store = reactive({ //updates the html immediately
   },
   setColor() {
     //window.location.hash = window.location.hash.slice(1).split("/").pop() || ""
-    const cardToSave = this.loadCard(this.root)
-    saveCard(this.root, {...cardToSave, color: this.color})
+    //const cardToSave = this.loadCard(this.root)
+    //saveCard(this.root, {...cardToSave, color: this.color})
 
     if (!this.root.color) {
       this.root.color = 'white'
@@ -627,13 +629,13 @@ const store = reactive({ //updates the html immediately
     this.cards.splice(index, 1)
     this.curser = Math.max(0, this.curser -1)
     this.save()
-    this.layout()
+    this.layout(this.root.layout)
   },
   duplicateCard(index) {
     this.curser++
     this.cards = [...this.cards.slice(0, this.curser), {...this.cards[index]}, ...this.cards.slice(this.curser)]
     this.save()
-    this.layout()
+    this.layout(this.root.layout)
   },
   menuClick() {
     const addDialog = document.getElementById("menuDialog") as HTMLDialogElement
