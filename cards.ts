@@ -669,10 +669,12 @@ const store = reactive({ //updates the html immediately
     addDialog.close()
   },
   getDataType(url) {
+    const imageFormats = ["jpeg","svg","webp","png","gif"]
+    const videoFormats = ["mp4","ogg","mpeg","mov","avi","webm"]
     if (url == "") return ""
     const dataType = getUrlExtension(url)
     if (dataType == "mp4") return "video"
-    if (dataType == "jpeg" || dataType == "svg" || dataType == "webp") return "image"
+    if (imageFormats.includes(dataType)) return "image"
     if (url.length < 2000 && url.length > 5) return "QrCode"
     if (dataType == url) return ""
     return "image"
