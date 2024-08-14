@@ -703,8 +703,15 @@ document.onkeydown = function (e) {
       store.curser = 0
     }
   }
-  if(e.keyCode == 37) store.curser =Math.max(store.curser -1,-1)
-  if(e.keyCode == 39) store.curser =Math.min(store.curser +1, store.cards.length-1)
+  if(e.keyCode == 37) { //left
+    if (e.shiftKey) store.swapCards(store.curser, store.curser -1)
+    else store.curser =Math.max(store.curser -1,-1)
+    
+  }
+  if(e.keyCode == 39) { //right
+    if (e.shiftKey) store.swapCards(store.curser, store.curser +1)
+    else store.curser =Math.min(store.curser +1, store.cards.length-1)
+  }
   
   store.layout(store.root.layout)
 
