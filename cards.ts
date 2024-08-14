@@ -8,6 +8,7 @@ function saveCard(hash, card) {
   localStorage.setItem(hash, JSON.stringify(card))
 }
 function getUrlExtension( url ) {
+  console.log(url)
   return url.split(/[#?]/)[0].split('.').pop().trim();
 }
 function makeHash(card) : string {

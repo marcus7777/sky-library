@@ -102,10 +102,13 @@
         <!--Display subcards-->
       <div v-for="(card, ci) in store.cards">
         <div class="container" v-if="store.curser === ci">
-          <div class="card subCard" tabindex="0" :key="store.curser +' '+ i" v-for="(n, i) in card.subCards">
+          <div class="card subCard" tabindex="0" :key="store.curser +' '+ i" v-for="(subCard, i) in card.subCards">
             <div class="inner" @click="store.deeper(i)">
-              <h3>{{ n.title }}</h3>
-              <p> {{ n.body }} </p>
+              <h3>{{ subCard.title }}</h3>
+              <p> {{ subCard.body }} </p>
+              <video v-if="store.getDataType(subCard.image)=='video'" controls :poster="subCard.thumbnail"><source :src="subCard.image" type="video/mp4"> </video>
+              <img v-if="store.getDataType(subCard.image)=='QrCode'" :src="store.makeQrCode(subCard.image)"/>
+              <img v-if="store.getDataType(subCard.image)=='image'" :src="subCard.image" @error="store.log"/>
             </div>
           </div>
         </div>
