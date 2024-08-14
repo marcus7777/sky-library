@@ -35,6 +35,7 @@ body {
   height: 100vh;
   position: absolute;
   width: 100vw;
+  transform: scale(1.2);
 }
 input {
   margin: .5em;
@@ -69,18 +70,19 @@ p,h3,h2,h1 {
 .card {
   display: inline-block;
   transition: all 0.5s ease-in-out;
-  animation: slideInBottom .7s ease-in-out;
+  animation: slideInBottom 0.7s ease-in-out;
 }
 .ellipse .outerMainCard, 
 .ellipse .subCard {
   position: absolute;
 }
 .ellipse .subCard {
-  height: 30px;
-  width: 30px;
-  overflow: clip;
-  border-radius: 100%;
-  border: #000 solid 1px;
+  transform: scale(0.3);
+  animation: slideInBottomSubEllipse 0.7s ease-in-out;
+}
+.ellipse .subCard:hover {
+  z-index: 1;
+  transform: scale(0.7);
 }
 .mainCard {
   height: -webkit-fill-available;
@@ -139,7 +141,11 @@ p,h3,h2,h1 {
   background-color: #fff777;
   transition: all 0.2s ease-in-out;
   margin-left:0%;   
-  box-shadow: 10px 10px 20px 
+  box-shadow: 10px 10px 20px;
+}
+.outerMainCard:hover,
+.outerMainCard:has(.curser) {
+  z-index: 1;
 }
 
 .card > h1 {
@@ -275,10 +281,18 @@ video {
 }
 @keyframes slideInBottom {
   from {
-    transform: translateY(100vh);
+    transform: translateY(100vh) scale(0);
   }
   to {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes slideInBottomSubEllipse {
+  from {
+    transform: translateY(100vh) scale(0);
+  }
+  to {
+    transform: translateY(0) scale(0.3);
   }
 }
 @keyframes slideOutBottom {
