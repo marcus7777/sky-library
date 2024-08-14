@@ -429,17 +429,35 @@ const store = reactive({ //updates the html immediately
   },
   distributeCardsCircle() {
     var radius = 35;
-    let cardElements = [... document.getElementsByClassName("outerMainCard")] as HTMLElement[]
-    let containers = document.getElementsByClassName("container")
-    const container = containers[0]
-    container.classList.add("ellipse")
-    let angle = -Math.PI/2;
-    let step = (2 * Math.PI) / cardElements.length;
+    let cardElements = [ ...document.getElementsByClassName("outerMainCard")] as HTMLElement[]
+    let containers = [ ...document.getElementsByClassName("container")] as HTMLElement[]
+    containers.forEach(container => {
+      container.classList.add("ellipse")
+    })
 
-    cardElements.forEach((card) => {
+    let angle = -Math.PI/2
+    let step = (2 * Math.PI) / cardElements.length
+
+    cardElements.forEach((card,i) => {
       const x = Math.round(radius * Math.cos(angle)) + 50
       const y = Math.round(radius * Math.sin(angle)) + 50
       // var size = (Math.round(radius * Math.sin(step))) -9
+      if (i == this.curser) {
+        let subCardElements = [... document.getElementsByClassName("subCard")] as HTMLElement[]
+        console.log(x,y)
+        let subAngle = -Math.PI/2
+        let subStep = (2 * Math.PI) / subCardElements.length
+        const subRadius = 20
+        subCardElements.forEach((subCard) => {
+          const subX = (((Math.round(subRadius * Math.cos(subAngle)) + x) * 9) + 50) / 10
+          const subY = (((Math.round(subRadius * Math.sin(subAngle)) + y) * 9) + 50) / 10
+
+          subCard.style.left = `calc(${subX}vw - ${subCard.offsetWidth/2}px)`
+          subCard.style.top = `calc(${subY}vh - ${subCard.offsetHeight/2}px)`
+
+          subAngle += subStep
+        })
+      }
 
       card.style.left = `calc(${x}vw - ${card.offsetWidth/2}px)` //use vh (vi) to have a circle
       card.style.top = `calc(${y}vh - ${card.offsetHeight/2}px)`
@@ -687,6 +705,9 @@ document.onkeydown = function (e) {
   }
   if(e.keyCode == 37) store.curser =Math.max(store.curser -1,-1)
   if(e.keyCode == 39) store.curser =Math.min(store.curser +1, store.cards.length-1)
+  
+  store.layout(store.root.layout)
+
 }
 createApp({
   // share it with app scopes

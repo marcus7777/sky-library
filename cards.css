@@ -71,8 +71,16 @@ p,h3,h2,h1 {
   transition: all 0.5s ease-in-out;
   animation: slideInBottom .7s ease-in-out;
 }
-.ellipse .outerMainCard {
+.ellipse .outerMainCard, 
+.ellipse .subCard {
   position: absolute;
+}
+.ellipse .subCard {
+  height: 30px;
+  width: 30px;
+  overflow: clip;
+  border-radius: 100%;
+  border: #000 solid 1px;
 }
 .mainCard {
   height: -webkit-fill-available;

@@ -10,8 +10,6 @@
   <body>
     <div id="table" v-scope="{}" >
       <div>
-        <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
-
         <button class="fab"       @click="store.addClick()" > + </button> 
         <button class="top-right" @click="store.menuClick()"> ⋮ </button> 
         <!-- <input type="number" v-model="store.showNext" >
@@ -90,7 +88,7 @@
                 <button v-if="store.cards[1] && store.curser > 0" @click="store.swapCards(i, i-1)">&lt;</button> <!-- < move cards -->
 		<button v-if="store.cards[1] && store.curser !== store.cards.length - 1" @click="store.swapCards(i, i+1)">&gt;</button> <!-- > move cards -->
               </div>
-              <div :data-index="i" v-else class="inner small" @click="store.curser = i" >
+              <div :data-index="i" v-else class="inner small" @click="store.curser = i; store.layout(store.root.layout)" >
                 <h2 :data-index="i" > {{ card.title }} </h2>
                 <p :data-index="i" > {{ card.body }} </p>
                 <img v-if="store.getDataType(card.image)=='image'" :src="card.image" @error="store.log"/>
@@ -104,7 +102,7 @@
         <!--Display subcards-->
       <div v-for="(card, ci) in store.cards">
         <div class="container" v-if="store.curser === ci">
-          <div class="card subcard" tabindex="0" :key="store.curser +' '+ i" v-for="(n, i) in card.subCards">
+          <div class="card subCard" tabindex="0" :key="store.curser +' '+ i" v-for="(n, i) in card.subCards">
             <div class="inner" @click="store.deeper(i)">
               <h3>{{ n.title }}</h3>
               <p> {{ n.body }} </p>
@@ -117,7 +115,7 @@
         <dialog id="mainOrSunDialog">
           <p>Would you like this card to be a subcard or main card</p>
           <button autofocus @click="store.inc()">Main</button> <!--this causes the swapping error if you click on another card before it is finished-->
-          <button v-if="store.cards[0]" @click="store.incSub()">Sub</button>
+          <button v-if="store.cards[0] && store.curser > -1" @click="store.incSub()">Sub</button>
         </dialog>
         <dialog id="menuDialog">
           <div>
@@ -142,7 +140,7 @@
             <button @click="store.closeDialog('addDialog')">x</button>
             <input v-model="store.newCard.title" id="title" @keyup.enter="store.onEnterTitle()">
             <button v-if="store.newCard.title" @click="store.inc()"> + Main </button>
-            <button v-if="store.cards[0] && store.newCard.title" @click="store.incSub()"> + Sub </button>
+            <button v-if="store.cards[0] && store.newCard.title && store.curser > -1" @click="store.incSub()"> + Sub </button>
             <button v-for="(breadcrumb, i) in store.trail" @click="store.load(breadcrumb)"> {{ store.trailNames[i] }} </button>
           </div>
             <!--<input type="number" v-model="store.showNext" >
