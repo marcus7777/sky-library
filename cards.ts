@@ -445,7 +445,6 @@ const store = reactive({ //updates the html immediately
       // var size = (Math.round(radius * Math.sin(step))) -9
       if (i == this.curser) {
         let subCardElements = [... document.getElementsByClassName("subCard")] as HTMLElement[]
-        console.log(x,y)
         let subAngle = -Math.PI/2
         let subStep = (2 * Math.PI) / subCardElements.length
         const subRadius = 20
@@ -459,9 +458,9 @@ const store = reactive({ //updates the html immediately
           subAngle += subStep
         })
       }
-
-      card.style.left = `calc(${x}vw - ${card.offsetWidth/2}px)` //use vh (vi) to have a circle
-      card.style.top = `calc(${y}vh - ${card.offsetHeight/2}px)`
+      
+      card.style.left = `calc(${x}vw - ${card.children[0].offsetWidth/2}px)` //use vh (vi) to have a circle
+      card.style.top = `calc(${y}vh - ${card.children[0].offsetHeight/2}px)`
       // card.style.transform = `rotateX(45deg) translateZ(calc(${y}vh - ${card.offsetHeight/2}px))
     
       //card.style.height = size + 'px';
