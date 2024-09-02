@@ -440,8 +440,8 @@ const store = reactive({ //updates the html immediately
     let step = (2 * Math.PI) / cardElements.length
 
     cardElements.forEach((card,i) => {
-      const x = Math.round(radius * Math.cos(angle)) + 50
-      const y = Math.round(radius * Math.sin(angle)) + 50
+      const x = radius * Math.cos(angle) + 50
+      const y = radius * Math.sin(angle) + 50
       // var size = (Math.round(radius * Math.sin(step))) -9
       if (i == this.curser) {
         let subCardElements = [... document.getElementsByClassName("subCard")] as HTMLElement[]
@@ -450,8 +450,8 @@ const store = reactive({ //updates the html immediately
         let subStep = (2 * Math.PI) / subCardElements.length
         const subRadius = 20
         subCardElements.forEach((subCard) => {
-          const subX = (((Math.round(subRadius * Math.cos(subAngle)) + x) * 9) + 50) / 10
-          const subY = (((Math.round(subRadius * Math.sin(subAngle)) + y) * 9) + 50) / 10
+          const subX = (((subRadius * Math.cos(subAngle) + x) * 9) + 50) / 10
+          const subY = (((subRadius * Math.sin(subAngle) + y) * 9) + 50) / 10
 
           subCard.style.left = `calc(${subX}vw - ${subCard.offsetWidth/2}px)`
           subCard.style.top = `calc(${subY}vh - ${subCard.offsetHeight/2}px)`
